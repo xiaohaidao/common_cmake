@@ -1,6 +1,8 @@
 
-if (GIT_GOOGLETEST_REPOSITORY)
+if (NOT GIT_GOOGLETEST_REPOSITORY)
     set(GIT_GOOGLETEST_REPOSITORY https://github.com/google/googletest.git)
+endif()
+if (NOT GOOGLETEST_VERSION)
     set(GOOGLETEST_VERSION release-1.10.0)
 endif()
 
