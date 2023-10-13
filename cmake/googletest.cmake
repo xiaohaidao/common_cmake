@@ -15,5 +15,26 @@ FetchContent_Declare(
     GIT_PROGRESS ON
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+#set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+FetchContent_GetProperties(googletest)
+if(NOT googletest_POPULATED)
+    FetchContent_Populate(googletest)
+    set(target_dir ${googletest_BINARY_DIR}/build/)
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} -B ${target_dir} . -DCMAKE_BUILD_TYPE=Release
+        WORKING_DIRECTORY ${googletest_SOURCE_DIR}
+        # COMMAND_ECHO STDOUT
+    )
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} --build  ${target_dir} -j
+        WORKING_DIRECTORY ${googletest_SOURCE_DIR}
+    )
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} --install ${target_dir} --prefix  ${target_dir}/install
+        WORKING_DIRECTORY ${googletest_SOURCE_DIR}
+    )
+    set(GTest_ROOT ${target_dir}/install/)
+    set(GTest_DIR ${target_dir}/install/)
+    find_package(GTest REQUIRED)
+endif()

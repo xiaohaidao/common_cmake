@@ -33,15 +33,17 @@ function(GETTEXT_LANG_LIST)
 
     get_filename_component(_output_path ${_output_path} ABSOLUTE)
     get_filename_component(_bin_path ${_bin_path} ABSOLUTE)
+    file(MAKE_DIRECTORY ${_output_path})
 
-    set(_pot_path ${_output_path}/${_target}.pot)
+#    set(_pot_path ${_output_path}/${_target}.pot)
+    set(_pot_path ${PROJECT_BINARY_DIR}/gettext/lang/${_target}.pot)
     file(GLOB_RECURSE _src_all_files ${_src_list})
 
     get_filename_component(_pot_dir ${_pot_path} DIRECTORY)
     file(MAKE_DIRECTORY ${_pot_dir})
 
     set(_pot_commnd ${GETTEXT_XGETTEXT_EXECUTABLE}
-            -c -k_ -kN_ --from-code=utf-8 --omit-header
+            -c -k_ -kN_ --from-code=utf-8 --no-location
             --package-name=${_target}
             --package-version=1.0
             ${_src_all_files}
@@ -63,7 +65,8 @@ function(GETTEXT_LANG_LIST)
         file(MAKE_DIRECTORY ${_mo_dir})
 
         add_custom_command(
-            OUTPUT ${_po_path}
+            TARGET lang_update
+            POST_BUILD
             COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE}
                 -U -v --backup=none
                 ${_po_path} ${_pot_path}
@@ -73,7 +76,6 @@ function(GETTEXT_LANG_LIST)
                 -o ${_mo_tmp_path}
             COMMAND ${CMAKE_COMMAND} -E copy
               ${_mo_tmp_path} ${_mo_path}
-            DEPENDS ${_pot_path} lang_update
         )
         if(NOT EXISTS ${_po_path})
             add_custom_command(
