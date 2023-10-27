@@ -6,7 +6,7 @@ if(DOXYGEN_FOUND AND PROJECT_IS_TOP_LEVEL)
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${PROJECT_SOURCE_DIR}/README.md")
 
     doxygen_add_docs(
-        docs ALL
+        docs
         ${PROJECT_SOURCE_DIR}/docs/
         ${PROJECT_SOURCE_DIR}/src/
         ${PROJECT_SOURCE_DIR}/include/
@@ -16,5 +16,6 @@ if(DOXYGEN_FOUND AND PROJECT_IS_TOP_LEVEL)
     install(
         DIRECTORY ${PROJECT_BINARY_DIR}/html
         TYPE DOC
+        OPTIONAL
     )
 endif()
