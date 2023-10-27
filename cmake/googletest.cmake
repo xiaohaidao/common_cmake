@@ -37,7 +37,8 @@ if(NOT googletest_POPULATED)
     endif()
 
     RUN_CMD(
-        COMMAND ${CMAKE_COMMAND} -B ${target_dir} . -DCMAKE_BUILD_TYPE=Release
+        COMMAND ${CMAKE_COMMAND} -B ${target_dir} .
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -Dgtest_force_shared_crt=ON
         WORKING_DIRECTORY ${src_dir}
     )
     RUN_CMD(
