@@ -13,9 +13,6 @@ endif()
 if (NOT GTEST_VERSION)
     set(GTEST_VERSION release-1.10.0) # c++11
 endif()
-if (NOT GTEST_INSTALL_DIR)
-    set(GTEST_INSTALL_DIR ${local_install})
-endif()
 
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 #set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -25,5 +22,5 @@ FIND_OR_BUILD(
     GIT_URL ${GIT_GTEST_REPOSITORY}
     GIT_TAGS ${GTEST_VERSION}
     INSTALL_DIR ${GTEST_INSTALL_DIR}
-    CMAKE_APPEND -DCMAKE_BUILD_TYPE=Release -Dgtest_force_shared_crt=ON
+    CMAKE_APPEND -Dgtest_force_shared_crt=ON
 )

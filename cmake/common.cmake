@@ -44,17 +44,6 @@ function(RUN_CMD)
 endfunction()
 
 ## following is FIND_OR_BUILD
-if(WIN32)
-    set(HOME $ENV{USERPROFILE})
-    string(REPLACE "\\" "/" HOME ${HOME})
-else()
-    set(HOME $ENV{HOME})
-endif()
-string(TOLOWER ${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}-${CMAKE_C_COMPILER_ID} local_install)
-set(local_install ${HOME}/.cpp/${local_install})
-set(local_install_dev ${HOME}/.cpp/${local_install}-dev)
-message("local_install ${local_install}")
-
 macro(FIND_OR_BUILD)
     set(_options)
     set(_one_arg TARGET GIT_URL GIT_TAGS INSTALL_DIR)
@@ -67,8 +56,27 @@ macro(FIND_OR_BUILD)
     set(_install_dir ${_prefix_INSTALL_DIR})
     set(_cmake_append ${_prefix_CMAKE_APPEND})
 
+    if (NOT _install_dir)
+        if(WIN32)
+            set(HOME $ENV{USERPROFILE})
+            string(REPLACE "\\" "/" HOME ${HOME})
+        else()
+            set(HOME $ENV{HOME})
+        endif()
+        string(TOLOWER ${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}-${CMAKE_C_COMPILER_ID} local_install)
+        set(local_install ${HOME}/.cpp/${local_install})
+        # message("local_install ${local_install}")
+
+        set(_install_dir ${local_install})
+    endif()
+    message("${_target}_install_dir ${_install_dir}")
+
     if(NOT ${_target}_FOUND)
-        set(install_dir ${_install_dir}/${_target}-${_git_tags}/)
+        if(MSVC)
+            set(_build_type ${CMAKE_BUILD_TYPE})
+        endif()
+        set(install_dir ${_install_dir}/${_target}-${_git_tags}/${_build_type})
+        set(${_target}_DIR "")
         find_package(${_target} CONFIG PATHS ${install_dir} NO_DEFAULT_PATH)
         if (${_target}_FOUND)
             message("${_target}_CONFIG path : ${${_target}_CONFIG}")
@@ -97,20 +105,41 @@ macro(FIND_OR_BUILD)
         set(target_dir ${${_target_lower}_BINARY_DIR}/build/)
         set(src_dir ${${_target_lower}_SOURCE_DIR}/)
 
-        message("_cmake_append ${_cmake_append}")
-        RUN_CMD(
-            COMMAND ${CMAKE_COMMAND} -B ${target_dir} . -DCMAKE_INSTALL_PREFIX=${install_dir} ${_cmake_append}
-            WORKING_DIRECTORY ${src_dir}
-        )
-        RUN_CMD(
-            COMMAND ${CMAKE_COMMAND} --build ${target_dir} -j
-            WORKING_DIRECTORY ${src_dir}
-        )
-        RUN_CMD(
-            # COMMAND ${CMAKE_COMMAND} --install ${target_dir} --prefix  ${install_dir}
-            COMMAND ${CMAKE_COMMAND} --build ${target_dir} -j --target install
-            WORKING_DIRECTORY ${src_dir}
-        )
+        # message("_cmake_append ${_cmake_append}")
+        if(MSVC)
+            RUN_CMD(
+                COMMAND ${CMAKE_COMMAND} -B ${target_dir} .
+                    -DCMAKE_BUILD_TYPE=${_build_type}
+                    -DCMAKE_INSTALL_PREFIX=${install_dir} ${_cmake_append}
+                WORKING_DIRECTORY ${src_dir}
+            )
+            RUN_CMD(
+                COMMAND ${CMAKE_COMMAND} --build ${target_dir} -j
+                    --config ${_build_type} --target install
+                WORKING_DIRECTORY ${src_dir}
+            )
+            # RUN_CMD(
+            #     # COMMAND ${CMAKE_COMMAND} --install ${target_dir} --prefix  ${install_dir}
+            #     COMMAND ${CMAKE_COMMAND} --build ${target_dir} -j --target install
+            #     WORKING_DIRECTORY ${src_dir}
+            # )
+        else()
+            RUN_CMD(
+                COMMAND ${CMAKE_COMMAND} -B ${target_dir} .
+                    -DCMAKE_BUILD_TYPE=Release
+                    -DCMAKE_INSTALL_PREFIX=${install_dir} ${_cmake_append}
+                WORKING_DIRECTORY ${src_dir}
+            )
+            RUN_CMD(
+                COMMAND ${CMAKE_COMMAND} --build ${target_dir} -j
+                WORKING_DIRECTORY ${src_dir}
+            )
+            RUN_CMD(
+                COMMAND ${CMAKE_COMMAND} --install ${target_dir} --prefix ${install_dir}
+                # COMMAND ${CMAKE_COMMAND} --build ${target_dir} -j --target install
+                WORKING_DIRECTORY ${src_dir}
+            )
+        endif()
 
         find_package(${_target} CONFIG REQUIRED PATHS ${install_dir} NO_DEFAULT_PATH)
         message("${_target}_CONFIG build path : ${${_target}_CONFIG}")
