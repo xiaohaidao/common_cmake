@@ -11,6 +11,28 @@ endif()
 #import tool
 include(GNUInstallDirs)
 
+## following is FETCHCONTENT_ADDSUB
+macro(FETCHCONTENT_ADDSUB)
+    set(_options)
+    set(_one_arg TARGET GIT_URL GIT_TAGS)
+    set(_multi_arg)
+    CMAKE_PARSE_ARGUMENTS(_prefix "${_options}" "${_one_arg}" "${_multi_arg}" ${ARGN})
+    set(_unuse_list ${_prefix_UNPARSED_ARGUMENTS})
+    set(_target ${_prefix_TARGET})
+    set(_git_url ${_prefix_GIT_URL})
+    set(_git_tags ${_prefix_GIT_TAGS})
+
+    include(FetchContent)
+    FetchContent_Declare(
+        ${_target}
+        GIT_REPOSITORY ${_git_url}
+        GIT_TAG ${_git_tags}
+        GIT_SHALLOW ON
+        GIT_PROGRESS ON
+    )
+    FetchContent_MakeAvailable(${_target})
+endmacro()
+
 ## following is RUN_CMD
 function(RUN_CMD)
     set(_options)
@@ -22,7 +44,7 @@ function(RUN_CMD)
     set(_dir ${_prefix_WORKING_DIRECTORY})
 
     #message("run command : ${_cmd}")
-    if(_dir)
+    if(${_dir})
         message("WORKING_DIRECTORY : ${_dir}")
         execute_process(
             COMMAND ${_cmd}
@@ -56,7 +78,7 @@ macro(FIND_OR_BUILD)
     set(_install_dir ${_prefix_INSTALL_DIR})
     set(_cmake_append ${_prefix_CMAKE_APPEND})
 
-    if (NOT _install_dir)
+    if (NOT ${_install_dir})
         if(WIN32)
             set(HOME $ENV{USERPROFILE})
             string(REPLACE "\\" "/" HOME ${HOME})
@@ -74,6 +96,9 @@ macro(FIND_OR_BUILD)
     if(NOT ${_target}_FOUND)
         if(MSVC)
             set(_build_type ${CMAKE_BUILD_TYPE})
+            if (NOT ${_build_type})
+                set(_build_type "Debug")
+            endif()
         endif()
         set(install_dir ${_install_dir}/${_target}-${_git_tags}/${_build_type})
         set(${_target}_DIR "")
@@ -118,11 +143,6 @@ macro(FIND_OR_BUILD)
                     --config ${_build_type} --target install
                 WORKING_DIRECTORY ${src_dir}
             )
-            # RUN_CMD(
-            #     # COMMAND ${CMAKE_COMMAND} --install ${target_dir} --prefix  ${install_dir}
-            #     COMMAND ${CMAKE_COMMAND} --build ${target_dir} -j --target install
-            #     WORKING_DIRECTORY ${src_dir}
-            # )
         else()
             RUN_CMD(
                 COMMAND ${CMAKE_COMMAND} -B ${target_dir} .
