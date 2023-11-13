@@ -22,5 +22,8 @@ FIND_OR_BUILD(
     GIT_URL ${GIT_GTEST_REPOSITORY}
     GIT_TAGS ${GTEST_VERSION}
     INSTALL_DIR ${GTEST_INSTALL_DIR}
-    CMAKE_APPEND -Dgtest_force_shared_crt=ON
+    CMAKE_APPEND
+    -Dgtest_force_shared_crt=OFF
+    # -DCMP0091=NEW
+    # -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>"
 )
