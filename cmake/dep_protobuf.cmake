@@ -34,7 +34,7 @@ function(GENERATE_PROTOBUF)
 
     add_library(${_target} OBJECT "${_proto_src}")
 
-    target_link_libraries(${_target} PUBLIC protobuf::libprotobuf gRPC::grpc++)
+    target_link_libraries(${_target} PUBLIC protobuf::libprotobuf)
 
     set(PROTO_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/")
     set(PROTO_IMPORT_DIRS "${CMAKE_CURRENT_LIST_DIR}/${_import_dir}")

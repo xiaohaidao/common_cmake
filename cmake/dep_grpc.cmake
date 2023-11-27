@@ -9,7 +9,7 @@ if (NOT GIT_GRPC_REPOSITORY)
     set(GIT_GRPC_REPOSITORY ${GITHUB_URL_PREFIX}https://github.com/grpc/grpc)
 endif()
 if (NOT GRPC_VERSION)
-    set(GRPC_VERSION v1.58.1)
+    set(GRPC_VERSION v1.58.2)
 endif()
 
 find_package(Threads REQUIRED)
