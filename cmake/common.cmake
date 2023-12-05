@@ -11,6 +11,16 @@ endif()
 #import tool
 include(GNUInstallDirs)
 
+if(WIN32)
+    set(HOME_PATH $ENV{USERPROFILE})
+    string(REPLACE "\\" "/" HOME_PATH ${HOME_PATH})
+else()
+    set(HOME_PATH $ENV{HOME})
+endif()
+set(CPP_PACKAGE_DIR ${HOME_PATH}/.cpp)
+string(TOLOWER ${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}-${CMAKE_C_COMPILER_ID} LOCAL_PACKAGE_DIR)
+set(LOCAL_PACKAGE_DIR ${CPP_PACKAGE_DIR}/${LOCAL_PACKAGE_DIR})
+
 ## following is FETCHCONTENT_ADDSUB
 macro(FETCHCONTENT_ADDSUB)
     set(_options)
@@ -79,17 +89,7 @@ macro(FIND_OR_BUILD)
     set(_cmake_append ${_prefix_CMAKE_APPEND})
 
     if ("${_install_dir}" STREQUAL "")
-        if(WIN32)
-            set(HOME $ENV{USERPROFILE})
-            string(REPLACE "\\" "/" HOME ${HOME})
-        else()
-            set(HOME $ENV{HOME})
-        endif()
-        string(TOLOWER ${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}-${CMAKE_C_COMPILER_ID} local_install)
-        set(local_install ${HOME}/.cpp/${local_install})
-        # message("local_install ${local_install}")
-
-        set(_install_dir ${local_install})
+        set(_install_dir ${LOCAL_PACKAGE_DIR})
     endif()
     message("${_target}_install_dir ${_install_dir}")
 
