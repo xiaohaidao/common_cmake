@@ -10,6 +10,12 @@ add_custom_target(clang_tidy
         -DCMAKE_CXX_CLANG_TIDY="${CLANG_TIDY_TOOL}"
         -S${PROJECT_SOURCE_DIR} -B${PROJECT_BINARY_DIR}
     COMMAND ${CMAKE_COMMAND} --build ${PROJECT_BINARY_DIR} -j
+    COMMAND
+        ${CMAKE_COMMAND}
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF
+        -DCMAKE_C_CLANG_TIDY=""
+        -DCMAKE_CXX_CLANG_TIDY=""
+        -S${PROJECT_SOURCE_DIR} -B${PROJECT_BINARY_DIR}
     COMMENT "Check code with Clang-Tidy"
 )
 endif()
