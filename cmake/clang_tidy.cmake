@@ -19,3 +19,8 @@ add_custom_target(clang_tidy
     COMMENT "Check code with Clang-Tidy"
 )
 endif()
+
+if (NOT PROJECT_IS_TOP_LEVEL)
+    set(CMAKE_C_CLANG_TIDY "")
+    set(CMAKE_CXX_CLANG_TIDY "")
+endif()
