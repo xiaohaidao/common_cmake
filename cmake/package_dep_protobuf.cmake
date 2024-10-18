@@ -1,29 +1,22 @@
 #
-# @brief protobuf @GIT_PROTOBUF_REPOSITORY @PROTOBUF_VERSION
-# @PROTOBUF_INSTALL_DIR
+# @brief protobuf link ${generate_protobuf TARGET}
 #
-if(NOT GIT_PROTOBUF_REPOSITORY)
-    set(GIT_PROTOBUF_REPOSITORY
-        ${GITHUB_URL_PREFIX}https://github.com/protocolbuffers/protobuf)
-endif()
-if(NOT PROTOBUF_VERSION)
-    set(PROTOBUF_VERSION v24.4) # need c++14
-endif()
 
-find_or_build(
+include(package_module_export)
+
+package_module_export(
     TARGET
     Protobuf
     GIT_URL
-    ${GIT_PROTOBUF_REPOSITORY}
+    https://github.com/protocolbuffers/protobuf.git
     GIT_TAGS
-    ${PROTOBUF_VERSION}
-    INSTALL_DIR
-    ${PROTOBUF_INSTALL_DIR}
-    CMAKE_APPEND
+    # v24.4 # c++14
+    v21.12 # c++11
+    CMAKE_ARGS
     -Dprotobuf_BUILD_TESTS=OFF
     -Dprotobuf_MSVC_STATIC_RUNTIME=ON)
 
-function(GENERATE_PROTOBUF)
+function(generate_protobuf)
     set(_options)
     set(_one_arg TARGET IMPORT_DIR)
     set(_multi_arg PROTO_SRC)

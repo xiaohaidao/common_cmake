@@ -1,29 +1,24 @@
 #
-# @brief protobuf @GIT_PROTOBUF_REPOSITORY @PROTOBUF_VERSION
-# @PROTOBUF_INSTALL_DIR
+# @brief grpc link ${generate_grpc TARGET}
 #
-if(NOT GIT_PROTOBUF_REPOSITORY)
-    set(GIT_PROTOBUF_REPOSITORY
-        ${GITHUB_URL_PREFIX}https://github.com/protocolbuffers/protobuf)
-endif()
-if(NOT PROTOBUF_VERSION)
-    set(PROTOBUF_VERSION v24.4) # need c++14
-endif()
 
-find_or_build(
+include(package_module_export)
+
+package_module_export(
     TARGET
-    Protobuf
+    gRPC
     GIT_URL
-    ${GIT_PROTOBUF_REPOSITORY}
+    https://github.com/grpc/grpc.git
     GIT_TAGS
-    ${PROTOBUF_VERSION}
-    INSTALL_DIR
-    ${PROTOBUF_INSTALL_DIR}
-    CMAKE_APPEND
-    -Dprotobuf_BUILD_TESTS=OFF
-    -Dprotobuf_MSVC_STATIC_RUNTIME=ON)
+    # v1.58.3
+    v1.33.2
+    CMAKE_ARGS
+    -DgRPC_BUILD_TESTS=OFF
+    -DgRPC_MSVC_STATIC_RUNTIME=ON
+    -DgRPC_SSL_PROVIDER=package
+    -DBUILD_TESTING=OFF)
 
-function(GENERATE_PROTOBUF)
+function(generate_grpc)
     set(_options)
     set(_one_arg TARGET IMPORT_DIR)
     set(_multi_arg PROTO_SRC)
@@ -36,7 +31,7 @@ function(GENERATE_PROTOBUF)
 
     add_library(${_target} OBJECT "${_proto_src}")
 
-    target_link_libraries(${_target} PUBLIC protobuf::libprotobuf)
+    target_link_libraries(${_target} PUBLIC protobuf::libprotobuf gRPC::grpc++)
 
     set(PROTO_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/")
     set(PROTO_IMPORT_DIRS "${CMAKE_CURRENT_LIST_DIR}/${_import_dir}")
@@ -46,5 +41,20 @@ function(GENERATE_PROTOBUF)
 
     protobuf_generate(TARGET ${_target} IMPORT_DIRS ${PROTO_IMPORT_DIRS}
                       PROTOC_OUT_DIR "${PROTO_BINARY_DIR}")
+
+    protobuf_generate(
+        TARGET
+        ${_target}
+        LANGUAGE
+        grpc
+        GENERATE_EXTENSIONS
+        .grpc.pb.h
+        .grpc.pb.cc
+        PLUGIN
+        "protoc-gen-grpc=\$<TARGET_FILE:gRPC::grpc_cpp_plugin>"
+        IMPORT_DIRS
+        ${PROTO_IMPORT_DIRS}
+        PROTOC_OUT_DIR
+        "${PROTO_BINARY_DIR}")
 
 endfunction()

@@ -1,8 +1,6 @@
-
 # cmake -DCMAKE_TOOLCHAIN_FILE=${file}
 
-# set(CMAKE_SYSTEM_NAME Linux)
-# set(CMAKE_SYSTEM_PROCESSOR arm)
+# set(CMAKE_SYSTEM_NAME Linux) set(CMAKE_SYSTEM_PROCESSOR arm)
 
 # set(tools /opt/gcc-linaro-4.9.4-arm-linux-gnueabihf/bin)
 set(CMAKE_C_COMPILER clang)

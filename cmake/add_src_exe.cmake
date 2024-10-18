@@ -1,0 +1,17 @@
+function(add_src_exe src)
+    set(library_name ${ARGN})
+    if(EXISTS ${src}/main.cpp)
+        add_executable(${PROJECT_NAME} main.cpp)
+
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${library_name})
+    endif()
+    if(EXISTS ${src}/bin)
+        file(GLOB_RECURSE bin_files "bin/*.cpp")
+        foreach(f ${bin_files})
+            get_filename_component(name ${f} NAME_WE)
+            add_executable(${name} ${f})
+
+            target_link_libraries(${name} PRIVATE ${library_name})
+        endforeach()
+    endif()
+endfunction()

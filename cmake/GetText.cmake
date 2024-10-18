@@ -1,21 +1,18 @@
-
 #
-# GETTEXT_LANG_LIST(
-#   TARGET <target>
-#   SRC <cpp_h_file> # example: src/*.cpp src/*.h
-#   PO_DIR <po_output_dir>
-#   MO_DIR <mo_output_dir>
-#   ...  <lang> # zh_CN.utf8 fr_FR.utf8
-#)
+# GETTEXT_LANG_LIST( TARGET <target> SRC <cpp_h_file> # example: src/*.cpp
+# src/*.h PO_DIR <po_output_dir> MO_DIR <mo_output_dir> ...  <lang> # zh_CN.utf8
+# fr_FR.utf8 )
 #
-# make lang_init # create pot and po files
-# make lang_update # update po files and create mo file
+# make lang_init # create pot and po files make lang_update # update po files
+# and create mo file
 #
 
 find_package(Gettext REQUIRED)
 if(NOT GETTEXT_FOUND)
-    message(FATAL_ERROR "gettext not found")
+    return()
 endif()
+
+message("Gettext found")
 
 find_program(GETTEXT_XGETTEXT_EXECUTABLE xgettext)
 find_program(GETTEXT_MSGINIT_EXECUTABLE msginit)
@@ -24,7 +21,8 @@ function(GETTEXT_LANG_LIST)
     set(_options)
     set(_one_arg TARGET PO_DIR MO_DIR)
     set(_multi_arg SRC)
-    CMAKE_PARSE_ARGUMENTS(_prefix "${_options}" "${_one_arg}" "${_multi_arg}" ${ARGN})
+    cmake_parse_arguments(_prefix "${_options}" "${_one_arg}" "${_multi_arg}"
+                          ${ARGN})
     set(_lang_list ${_prefix_UNPARSED_ARGUMENTS})
     set(_target ${_prefix_TARGET})
     set(_src_list ${_prefix_SRC})
@@ -35,29 +33,32 @@ function(GETTEXT_LANG_LIST)
     get_filename_component(_bin_path ${_bin_path} ABSOLUTE)
     file(MAKE_DIRECTORY ${_output_path})
 
-#    set(_pot_path ${_output_path}/${_target}.pot)
+    # set(_pot_path ${_output_path}/${_target}.pot)
     set(_pot_path ${PROJECT_BINARY_DIR}/gettext/lang/${_target}.pot)
     file(GLOB_RECURSE _src_all_files ${_src_list})
 
     get_filename_component(_pot_dir ${_pot_path} DIRECTORY)
     file(MAKE_DIRECTORY ${_pot_dir})
 
-    set(_pot_commnd ${GETTEXT_XGETTEXT_EXECUTABLE}
-            -c -k_ -kN_ --from-code=utf-8 --no-location
-            --package-name=${_target}
-            --package-version=1.0
-            ${_src_all_files}
-            -o ${_pot_path}
-    )
-    add_custom_target(lang_update
-        COMMAND ${_pot_commnd}
-    )
-    add_custom_target(lang_init
-        COMMAND ${_pot_commnd}
-    )
+    set(_pot_commnd
+        ${GETTEXT_XGETTEXT_EXECUTABLE}
+        -c
+        -k_
+        -kN_
+        --from-code=utf-8
+        --no-location
+        --package-name=${_target}
+        --package-version=1.0
+        ${_src_all_files}
+        -o
+        ${_pot_path})
+    add_custom_target(lang_update COMMAND ${_pot_commnd})
+    add_custom_target(lang_init COMMAND ${_pot_commnd})
 
     foreach(lang ${_lang_list})
-        set(_mo_tmp_path ${PROJECT_BINARY_DIR}/gettext/lang/${lang}/LC_MESSAGES/${_target}.mo)
+        set(_mo_tmp_path
+            ${PROJECT_BINARY_DIR}/gettext/lang/${lang}/LC_MESSAGES/${_target}.mo
+        )
         set(_mo_path ${_bin_path}/${lang}/LC_MESSAGES/${_target}.mo)
         set(_po_path ${_output_path}/${_target}_${lang}.po)
 
@@ -67,25 +68,17 @@ function(GETTEXT_LANG_LIST)
         add_custom_command(
             TARGET lang_update
             POST_BUILD
-            COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE}
-                -U -v --backup=none
-                ${_po_path} ${_pot_path}
-            COMMAND ${GETTEXT_MSGFMT_EXECUTABLE}
-                -c -v
-                ${_po_path}
-                -o ${_mo_tmp_path}
-            COMMAND ${CMAKE_COMMAND} -E copy
-              ${_mo_tmp_path} ${_mo_path}
-        )
+            COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} -U -v --backup=none
+                    ${_po_path} ${_pot_path}
+            COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -c -v ${_po_path} -o
+                    ${_mo_tmp_path}
+            COMMAND ${CMAKE_COMMAND} -E copy ${_mo_tmp_path} ${_mo_path})
         if(NOT EXISTS ${_po_path})
             add_custom_command(
                 TARGET lang_init
                 POST_BUILD
-                COMMAND ${GETTEXT_MSGINIT_EXECUTABLE}
-                    --no-translator -l ${lang}
-                    -i ${_pot_path}
-                    -o ${_po_path}
-            )
+                COMMAND ${GETTEXT_MSGINIT_EXECUTABLE} --no-translator -l
+                        ${lang} -i ${_pot_path} -o ${_po_path})
         endif()
     endforeach()
 endfunction()
