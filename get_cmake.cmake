@@ -98,10 +98,10 @@ macro(fetch_add_packet_macro name)
         ${ARGN}
         GIT_SHALLOW ON
         GIT_PROGRESS ON)
-    FetchContent_MakeAvailable(${name})
-    string(TOUPPER ${name} name)
-    set(FETCHCONTENT_UPDATES_DISCONNECTED_${name} ON)
+    string(TOUPPER ${name} name_upper)
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_${name_upper} ON)
     # or set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
+    FetchContent_MakeAvailable(${name})
 endmacro()
 
 function(fetch_add_packet)
@@ -121,11 +121,12 @@ if(NOT CUSTOM_COMMON_CMAKE)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
-if(EXISTS $${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
+if(EXISTS ${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
     configure_file(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake
                    cmake/dependencies_${PROJECT_NAME}.cmake)
 endif()
-if(EXISTS $${PROJECT_SOURCE_DIR}/cmake/dependencies_dev.cmake)
+if(EXISTS ${PROJECT_SOURCE_DIR}/cmake/dependencies_dev.cmake)
     configure_file(${PROJECT_SOURCE_DIR}/cmake/dependencies_dev.cmake
                    cmake/dependencies_dev_${PROJECT_NAME}.cmake)
 endif()
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_BINARY_DIR}/cmake")
