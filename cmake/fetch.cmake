@@ -12,7 +12,7 @@ function(fetch_add_packet)
     # string(TOUPPER ${name} name_upper)
     # set(FETCHCONTENT_UPDATES_DISCONNECTED_${name_upper} ON)
     set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
-    # or set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
+    # set(FETCHCONTENT_FULLY_DISCONNECTED ON)
     fetch_add_packet_macro(${ARGV})
 endfunction()
 

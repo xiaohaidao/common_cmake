@@ -1,4 +1,8 @@
-# add_executable(${PROJECT_NAME} main.cpp)
+include(use_string_version)
 
-include(add_src_exe)
-add_src_exe(${CMAKE_CURRENT_LIST_DIR})
+set(library_name ${PROJECT_NAME}lib)
+add_src_lib(${library_name}
+    libs.cpp
+)
+
+add_src_exe(${CMAKE_CURRENT_LIST_DIR} ${library_name})

@@ -1,7 +1,8 @@
 if(NOT PROJECT_IS_TOP_LEVEL)
     return()
 endif()
-if(MSVC)
+
+function(use_msvc_memory_check)
     set(VLD_DIR "C:/Program Files (x86)/Visual Leak Detector")
     if(EXISTS "${VLD_DIR}/include/vld.h")
         target_compile_definitions(${test_name} PRIVATE HAS_VLD_H)
@@ -18,18 +19,12 @@ if(MSVC)
         "${VLD_DIR}/lib/Win32"
         endif
         ())
-endif()
+endfunction()
 
-add_custom_target(
-    memory-check
-    COMMAND ${CMAKE_COMMAND} -B ${CMAKE_BINARY_DIR} -DENABLE_MEMORY_CHECKER=ON
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "enable memory check")
-
-add_custom_target(
-    no-memory-check
-    COMMAND ${CMAKE_COMMAND} -B ${CMAKE_BINARY_DIR} -DENABLE_MEMORY_CHECKER=OFF
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "disable memory check")
-
-# gcc  -analysis -pg -fsanitize -cov
+set(option
+    -fsanitize=address
+    -fsanitize=leak
+    -fsanitize=undefined)
+# -fsanitize=thread
+add_compile_options("$<$<BOOL:${ENABLE_MEMORY_CHECKER}>:${option}>")
+add_link_options("$<$<BOOL:${ENABLE_MEMORY_CHECKER}>:${option}>")

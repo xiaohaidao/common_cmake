@@ -11,6 +11,7 @@ if(NOT COMMON_CMAKE_VERSION)
 endif()
 
 if(NOT COMMAND fetch_add_packet)
+    # set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
     macro(fetch_add_packet_macro name)
         include(FetchContent)
         FetchContent_Declare(
@@ -23,28 +24,21 @@ if(NOT COMMAND fetch_add_packet)
 
     function(fetch_add_packet)
         set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
-        # or set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
+        # set(FETCHCONTENT_FULLY_DISCONNECTED ON)
         fetch_add_packet_macro(${ARGV})
     endfunction()
 endif()
 
-if(NOT CUSTOM_COMMON_CMAKE)
+if(NOT CUSTOM_LOCAL_COMMON_CMAKE)
     fetch_add_packet_macro(
         common_cmake GIT_REPOSITORY ${GIT_COMMON_CMAKE_REPOSITORY} GIT_TAG
         ${COMMON_CMAKE_VERSION})
-    list(APPEND CMAKE_MODULE_PATH "${common_cmake_SOURCE_DIR}/cmake")
-
-    # #import include
-    include(include_cmake)
+else()
+    fetch_add_packet_macro(common_cmake SOURCE_DIR ${CUSTOM_LOCAL_COMMON_CMAKE})
 endif()
+list(APPEND CMAKE_MODULE_PATH "${common_cmake_SOURCE_DIR}/cmake")
+# import include
+include(include_cmake)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
-if(EXISTS ${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
-    configure_file(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake
-                   cmake/dependencies_${PROJECT_NAME}.cmake)
-endif()
-if(EXISTS ${PROJECT_SOURCE_DIR}/cmake/dependencies_dev.cmake)
-    configure_file(${PROJECT_SOURCE_DIR}/cmake/dependencies_dev.cmake
-                   cmake/dependencies_dev_${PROJECT_NAME}.cmake)
-endif()
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_BINARY_DIR}/cmake")

@@ -2,11 +2,14 @@ option(MSVC_STATIC_RUNTIME "Link with static msvc runtime libraries" ON)
 if(NOT (MSVC_STATIC_RUNTIME AND PROJECT_IS_TOP_LEVEL))
     return()
 endif()
+if(NOT WIN32)
+    return()
+endif()
 
+message(
+    "Link with static runtime libraries in ${CMAKE_CURRENT_SOURCE_DIR}"
+)
 if(MSVC)
-    message(
-        "Link with static msvc runtime libraries in ${CMAKE_CURRENT_SOURCE_DIR}"
-    )
     # switch from dynamic to static linking of msvcrt
     foreach(
         flag_var
@@ -31,4 +34,8 @@ if(MSVC)
     # "MultiThreaded$<$<CONFIG:Debug>:Debug>") endif() example
     # set_property(TARGET ${test_name} PROPERTY MSVC_RUNTIME_LIBRARY
     # "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+else()
+    list(append CMAKE_C_FLAGS -static-libgcc -static-libstdc++)
+    list(append CMAKE_CXX_FLAGS -static-libgcc -static-libstdc++)
+    # target_link_libraries(${test_name} PRIVATE -static-libstdc++ -static-libgcc)
 endif()

@@ -14,7 +14,8 @@ function(package_module_find found)
         ${_argv_GIT_TAGS}
         INSTALL_DIR
         ${_argv_INSTALL_DIR})
-    set(CMAKE_PREFIX_PATH ${package_install_dir})
+    # set(CMAKE_PREFIX_PATH ${package_install_dir})
+    set(CMAKE_FIND_ROOT_PATH ${package_install_dir})
     find_package(${target} CONFIG) # PATHS ${package_install_dir})
 
     if(${${target}_FOUND})
@@ -129,48 +130,24 @@ function(package_module_build)
             ${CMAKE_COMMAND}
             -B
             ${target_dir}
-            .
+            -S
+            ${src_dir}
             -DCMAKE_BUILD_TYPE=${build_type}
             -DCMAKE_INSTALL_PREFIX=${install_dir}
             ${cmake_args}
             WORKING_DIRECTORY
             ${src_dir})
-        if(MSVC)
-            process_cmd(
-                COMMAND
-                ${CMAKE_COMMAND}
-                --build
-                ${target_dir}
-                -j
-                --config
-                ${build_type}
-                --target
-                install
-                WORKING_DIRECTORY
-                ${src_dir})
-        else()
-            process_cmd(
-                COMMAND
-                ${CMAKE_COMMAND}
-                --build
-                ${target_dir}
-                -j
-                WORKING_DIRECTORY
-                ${src_dir})
-            process_cmd(
-                COMMAND
-                ${CMAKE_COMMAND}
-                --install
-                ${target_dir}
-                --prefix
-                ${install_dir}
-                # COMMAND ${CMAKE_COMMAND} --build ${target_dir} -j --target
-                # install
-                WORKING_DIRECTORY
-                ${src_dir})
-        endif()
-        # find_package(${target} CONFIG REQUIRED PATHS ${install_dir}
-        # NO_DEFAULT_PATH) message("${target}_CONFIG build path :
-        # ${${target}_CONFIG}")
+        process_cmd(
+            COMMAND
+            ${CMAKE_COMMAND}
+            --build
+            ${target_dir}
+            -j
+            --config
+            ${build_type}
+            --target
+            install
+            WORKING_DIRECTORY
+            ${src_dir})
     endif()
 endfunction()
