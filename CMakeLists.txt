@@ -9,8 +9,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 # import tool
 include(fetch)
-# include(common)
-include(doxygen)
+# include(common) # deprecate
+include(docs)
 include(format)
 include(checker)
 include(add_src_exe)

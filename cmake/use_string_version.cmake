@@ -1,4 +1,6 @@
-set(StringVersionPath ${CMAKE_CURRENT_SOURCE_DIR}/StringVersion.h)
+if(NOT DEFINED StringVersionPath)
+    set(StringVersionPath ${CMAKE_CURRENT_SOURCE_DIR}/StringVersion.h)
+endif()
 file(WRITE ${StringVersionPath} )
 
 function(out_version_file)

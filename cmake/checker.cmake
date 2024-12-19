@@ -6,3 +6,8 @@ add_custom_target(checker)
 add_dependencies(checker clang-tidy)
 add_dependencies(checker check-memory)
 add_dependencies(checker check-profile)
+
+add_custom_target(unchecker)
+add_dependencies(unchecker clang-tidy-cancel)
+add_dependencies(unchecker check-memory-cancel)
+add_dependencies(unchecker check-profile-cancel)

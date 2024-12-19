@@ -1,12 +1,19 @@
 include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
 
 # install and export configure
-set(library_name_target ${library_name}Targets)
+if(DEFINED install_export_target)
+elseif(DEFINED library_name)
+    set(install_export_target ${library_name})
+else()
+    message(FATAL_ERROR "not found target in install_export")
+endif()
+set(library_name_target ${install_export_target}Targets)
 set(install_export_dir ${PROJECT_BINARY_DIR}/install_export/${PROJECT_NAME}/)
-install(TARGETS ${library_name} EXPORT ${library_name_target})
+install(TARGETS ${install_export_target} EXPORT ${library_name_target})
 
 export(
-    TARGETS ${library_name}
+    TARGETS ${install_export_target}
     NAMESPACE ${PROJECT_NAME}::
     FILE ${install_export_dir}/${library_name_target}.cmake)
 
@@ -16,7 +23,7 @@ install(
     NAMESPACE ${PROJECT_NAME}::
     DESTINATION ${cmake_files_install_dir})
 
-set(library_name_config ${library_name}Config)
+set(library_name_config ${install_export_target}Config)
 configure_package_config_file(
     ${CMAKE_CURRENT_LIST_DIR}/template/Config.cmake.in
     ${install_export_dir}/${library_name_config}.cmake
