@@ -3,6 +3,7 @@ include(GNUInstallDirs)
 
 # install and export configure
 if(DEFINED install_export_target)
+
 elseif(DEFINED library_name)
     set(install_export_target ${library_name})
 else()

@@ -6,9 +6,7 @@ if(NOT WIN32)
     return()
 endif()
 
-message(
-    "Link with static runtime libraries in ${CMAKE_CURRENT_SOURCE_DIR}"
-)
+message("Link with static runtime libraries in ${CMAKE_CURRENT_SOURCE_DIR}")
 if(MSVC)
     # switch from dynamic to static linking of msvcrt
     foreach(
@@ -37,5 +35,6 @@ if(MSVC)
 else()
     list(append CMAKE_C_FLAGS -static-libgcc -static-libstdc++)
     list(append CMAKE_CXX_FLAGS -static-libgcc -static-libstdc++)
-    # target_link_libraries(${test_name} PRIVATE -static-libstdc++ -static-libgcc)
+    # target_link_libraries(${test_name} PRIVATE -static-libstdc++
+    # -static-libgcc)
 endif()

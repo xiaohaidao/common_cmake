@@ -21,10 +21,7 @@ function(use_msvc_memory_check)
         ())
 endfunction()
 
-set(option
-    -fsanitize=address
-    -fsanitize=leak
-    -fsanitize=undefined)
+set(option -fsanitize=address -fsanitize=leak -fsanitize=undefined)
 # -fsanitize=thread
 add_compile_options("$<$<BOOL:${ENABLE_MEMORY_CHECKER}>:${option}>")
 add_link_options("$<$<BOOL:${ENABLE_MEMORY_CHECKER}>:${option}>")
