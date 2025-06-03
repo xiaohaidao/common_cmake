@@ -1,4 +1,3 @@
-
 add_custom_target(
     update-ws
     COMMAND python ${common_cmake_SOURCE_DIR}/concmake.py

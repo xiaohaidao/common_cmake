@@ -1,6 +1,5 @@
 include(use_string_version)
 
-set(library_name ${PROJECT_NAME}lib)
-add_src_lib(${library_name} libs.cpp)
+add_lib_exe(${PROJECT_NAME} libs.cpp)
 
-add_src_exe(${CMAKE_CURRENT_LIST_DIR} ${library_name})
+# install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/" DESTINATION include)

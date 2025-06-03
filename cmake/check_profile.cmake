@@ -5,10 +5,6 @@ set(check_profile_cancel_target check-profile-cancel)
 if(NOT PROJECT_IS_TOP_LEVEL)
     set(check_profile_target check-profile-${PROJECT_NAME})
     set(check_profile_cancel_target check-profile-cancel-${PROJECT_NAME})
-    if(TARGET check-profile)
-        add_dependencies(check-profile ${check_profile_target})
-        add_dependencies(check-profile-cancel ${check_profile_cancel_target})
-    endif()
 endif()
 message("${check_profile_target} found")
 add_custom_target(
@@ -29,4 +25,3 @@ add_custom_target(
             -S ${CMAKE_SOURCE_DIR}
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     COMMENT " cancel profile check ${check_profile_target}")
-

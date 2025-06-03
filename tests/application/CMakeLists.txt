@@ -6,4 +6,6 @@ project("application" VERSION 0.0.1)
 set(CUSTOM_LOCAL_COMMON_CMAKE ${CMAKE_CURRENT_LIST_DIR}/../../)
 include(cmake/get_cmake.cmake)
 
-include(use_project_top_dir)
+add_dir_src(src)
+
+add_dir_tests(tests)
