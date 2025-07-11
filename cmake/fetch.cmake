@@ -8,12 +8,18 @@ macro(fetch_add_packet_macro name)
     FetchContent_MakeAvailable(${name})
 endmacro()
 
-function(fetch_add_packet)
+function(fetch_add_packet name)
     # string(TOUPPER ${name} name_upper)
     # set(FETCHCONTENT_UPDATES_DISCONNECTED_${name_upper} ON)
-    set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
+    # set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
     # set(FETCHCONTENT_FULLY_DISCONNECTED ON)
-    fetch_add_packet_macro(${ARGV})
+    if((NOT ${CMAKE_PROJECT_NAME} STREQUAL "workspace_project")
+       AND (EXISTS ${CMAKE_SOURCE_DIR}/../${name}))
+        fetch_add_packet_macro(${name} SOURCE_DIR
+                               ${CMAKE_SOURCE_DIR}/../${name})
+    else()
+        fetch_add_packet_macro(${name} ${ARGV})
+    endif()
 endfunction()
 
 # Parse the argument of CPMAddPackage in case a single one was provided and

@@ -38,6 +38,17 @@ function(get_local_home_dir home_dir)
         PARENT_SCOPE)
 endfunction()
 
+function(get_local_install_dir install_dir)
+    if(${CMAKE_PROJECT_NAME} STREQUAL "workspace_project")
+        set(INS_DIR ${CMAKE_SOURCE_DIR})
+    else()
+        set(INS_DIR ${CMAKE_SOURCE_DIR}/../)
+    endif()
+    set(${install_dir}
+        ${INS_DIR}/
+        PARENT_SCOPE)
+endfunction()
+
 function(get_local_package_install_dir local_install_dir)
     cmake_parse_arguments(_argv "" "TARGET;VERSION;INSTALL_DIR" "" ${ARGN})
     set(target ${_argv_TARGET})
@@ -45,7 +56,7 @@ function(get_local_package_install_dir local_install_dir)
 
     set(prefix_install_dir ${_argv_INSTALL_DIR})
     if(NOT DEFINED ${prefix_install_dir})
-        get_local_home_dir(prefix_install_dir)
+        get_local_install_dir(prefix_install_dir)
         string(APPEND prefix_install_dir ".cpp/")
     endif()
 

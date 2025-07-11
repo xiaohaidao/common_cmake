@@ -14,5 +14,5 @@ file_glob(CXX_FORMAT_FILES "*.h" "*.hpp" "*.cpp" "*.c")
 add_custom_target(
     ${clang_format_target}
     COMMAND ${CLANG_FORMAT_TOOL} -style=file -i ${CXX_FORMAT_FILES}
-    WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Format code with ${clang_format_target}")
