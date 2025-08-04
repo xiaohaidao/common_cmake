@@ -90,7 +90,7 @@ macro(FIND_OR_BUILD)
     if("${_install_dir}" STREQUAL "")
         set(_install_dir ${LOCAL_PACKAGE_DIR})
     endif()
-    message("${_target}_install_dir ${_install_dir}")
+    message("-- ${_target}_install_dir ${_install_dir}")
 
     if(NOT ${_target}_FOUND)
         if(MSVC)
@@ -103,7 +103,7 @@ macro(FIND_OR_BUILD)
         set(${_target}_DIR "")
         find_package(${_target} CONFIG PATHS ${install_dir} NO_DEFAULT_PATH)
         if(${_target}_FOUND)
-            message("${_target}_CONFIG path : ${${_target}_CONFIG}")
+            message("-- ${_target}_CONFIG path : ${${_target}_CONFIG}")
         endif()
 
     endif()
@@ -184,7 +184,7 @@ macro(FIND_OR_BUILD)
 
         find_package(${_target} CONFIG REQUIRED PATHS ${install_dir}
                      NO_DEFAULT_PATH)
-        message("${_target}_CONFIG build path : ${${_target}_CONFIG}")
+        message("-- ${_target}_CONFIG build path : ${${_target}_CONFIG}")
     endif()
 
 endmacro()

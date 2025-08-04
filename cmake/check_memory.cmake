@@ -7,7 +7,7 @@ if(NOT PROJECT_IS_TOP_LEVEL)
     set(check_memory_cancel_target check-memory-cancel-${PROJECT_NAME})
 endif()
 
-message("${check_memory_target} found")
+message("-- ${check_memory_target} found")
 add_custom_target(
     ${check_memory_target}
     COMMAND ${CMAKE_COMMAND} -B ${CMAKE_BINARY_DIR} -DENABLE_MEMORY_CHECKER=ON

@@ -17,7 +17,7 @@ if(NOT COMMAND fetch_add_packet)
         include(FetchContent)
         FetchContent_Declare(
             ${name}
-            ${ARGN}
+            ${ARGN} OVERRIDE_FIND_PACKAGE
             GIT_SHALLOW ON
             GIT_PROGRESS ON)
         FetchContent_MakeAvailable(${name})

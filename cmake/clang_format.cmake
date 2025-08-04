@@ -9,8 +9,10 @@ endif()
 
 include(file_glob)
 
-message("${clang_format_target} program found")
-file_glob(CXX_FORMAT_FILES "*.h" "*.hpp" "*.cpp" "*.c")
+message("-- ${clang_format_target} program found")
+if(NOT PROJECT_IS_WORKSPACE)
+    file_glob(CXX_FORMAT_FILES "*.h" "*.hpp" "*.cpp" "*.c")
+endif()
 add_custom_target(
     ${clang_format_target}
     COMMAND ${CLANG_FORMAT_TOOL} -style=file -i ${CXX_FORMAT_FILES}

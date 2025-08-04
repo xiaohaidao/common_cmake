@@ -7,7 +7,7 @@ if(NOT PROJECT_IS_TOP_LEVEL)
     set(doxygen_target doxygen-${PROJECT_NAME})
 endif()
 
-message("${doxygen_target} found")
+message("-- ${doxygen_target} found")
 # set(DOXYGEN_EXCLUDE_PATTERNS  */build*/* */tests/*)
 set(DOXYGEN_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/doxygen/${PROJECT_NAME})
 if(EXISTS ${PROJECT_SOURCE_DIR}/docs/README.md)

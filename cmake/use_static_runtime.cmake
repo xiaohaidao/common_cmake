@@ -6,7 +6,7 @@ if(NOT WIN32)
     return()
 endif()
 
-message("Link with static runtime libraries in ${CMAKE_CURRENT_SOURCE_DIR}")
+message("-- Link with static runtime libraries in ${CMAKE_CURRENT_SOURCE_DIR}")
 if(MSVC)
     # switch from dynamic to static linking of msvcrt
     foreach(

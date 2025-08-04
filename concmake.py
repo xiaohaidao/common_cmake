@@ -1,4 +1,4 @@
-#!/bin/python
+#!/bin/env python
 
 import os
 import sys
@@ -13,6 +13,14 @@ project("workspace_project")
 # import common configure
 set(CUSTOM_LOCAL_COMMON_CMAKE {0})
 include({0}/get_cmake.cmake)
+
+function(add_project SUBFOLDER)
+    message(STATUS "Adding project ${{SUBFOLDER}}")
+    fetch_add_packet_macro(
+        ${{SUBFOLDER}}
+        SOURCE_DIR ${{CMAKE_CURRENT_LIST_DIR}}/${{SUBFOLDER}}
+    )
+endfunction()
 
 {1}
 
@@ -49,9 +57,8 @@ class Arg(object):
 
 def get_cmake_text():
     file_path = Path(__file__).resolve().parent
-    proj_template = "fetch_add_packet_macro({0} SOURCE_DIR {1})\n"
-    get_str = lambda x: proj_template.format(x.name,
-                                             "${CMAKE_CURRENT_LIST_DIR}/" + x.name)
+    proj_template = "add_project({0})\n"
+    get_str = lambda x: proj_template.format(x.name)
     check_path = lambda x: x.is_dir() and x != file_path  and not (x/"CMakeCache.txt").exists()
     proj_str =  [get_str(x) for x in Path.cwd().iterdir() if check_path(x)]
     return cmake_template.format(file_path, "".join(proj_str))

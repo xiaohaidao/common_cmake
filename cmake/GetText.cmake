@@ -12,7 +12,7 @@ if(NOT GETTEXT_FOUND)
     return()
 endif()
 
-message("Gettext found")
+message("-- Gettext found")
 
 find_program(GETTEXT_XGETTEXT_EXECUTABLE xgettext)
 find_program(GETTEXT_MSGINIT_EXECUTABLE msginit)

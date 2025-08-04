@@ -6,7 +6,7 @@ endif()
 set(CMAKE_C_COMPILER_LAUNCHER ${SCCACHE})
 set(CMAKE_CXX_COMPILER_LAUNCHER ${SCCACHE})
 set(SCCACHE_IGNORE_SERVER_IO_ERROR 1)
-message("sccache exits in ${CMAKE_CURRENT_SOURCE_DIR}")
+message("-- sccache exits in ${CMAKE_CURRENT_SOURCE_DIR}")
 
 if(MSVC)
     if(${CMAKE_VERSION} VERSION_LESS "3.25")

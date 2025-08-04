@@ -2,7 +2,7 @@ macro(fetch_add_packet_macro name)
     include(FetchContent)
     FetchContent_Declare(
         ${name}
-        ${ARGN}
+        ${ARGN} OVERRIDE_FIND_PACKAGE
         GIT_SHALLOW ON
         GIT_PROGRESS ON)
     FetchContent_MakeAvailable(${name})
@@ -13,8 +13,7 @@ function(fetch_add_packet name)
     # set(FETCHCONTENT_UPDATES_DISCONNECTED_${name_upper} ON)
     # set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
     # set(FETCHCONTENT_FULLY_DISCONNECTED ON)
-    if((NOT ${CMAKE_PROJECT_NAME} STREQUAL "workspace_project")
-       AND (EXISTS ${CMAKE_SOURCE_DIR}/../${name}))
+    if((NOT PROJECT_IS_WORKSPACE) AND (EXISTS ${CMAKE_SOURCE_DIR}/../${name}))
         fetch_add_packet_macro(${name} SOURCE_DIR
                                ${CMAKE_SOURCE_DIR}/../${name})
     else()

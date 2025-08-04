@@ -8,7 +8,7 @@ if(NOT PROJECT_IS_TOP_LEVEL)
 endif()
 
 include(file_glob)
-message("${cmake_format_target} program found")
+message("-- ${cmake_format_target} program found")
 file_glob(CMAKE_FILES "*.cmake" "CMakeLists.txt")
 
 add_custom_target(

@@ -19,7 +19,7 @@ function(package_module_find found)
     find_package(${target} CONFIG) # PATHS ${package_install_dir})
 
     if(${${target}_FOUND})
-        message("found ${target} in ${${target}_CONFIG}")
+        message("-- found ${target} in ${${target}_CONFIG}")
     endif()
     set(${found}
         ${${target}_FOUND}
@@ -39,7 +39,7 @@ function(get_local_home_dir home_dir)
 endfunction()
 
 function(get_local_install_dir install_dir)
-    if(${CMAKE_PROJECT_NAME} STREQUAL "workspace_project")
+    if(PROJECT_IS_WORKSPACE)
         set(INS_DIR ${CMAKE_SOURCE_DIR})
     else()
         set(INS_DIR ${CMAKE_SOURCE_DIR}/../)
