@@ -18,5 +18,6 @@ function(add_src_lib target)
     )
 
     # install and export configure
-    include(use_install_export)
+    message(".... library_name : ${library_name}")
+    install(TARGETS ${library_name} EXPORT ${PROJECT_NAME})
 endfunction()

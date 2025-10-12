@@ -6,6 +6,7 @@ function(add_dir_tests tests)
         if(EXISTS ${PROJECT_SOURCE_DIR}/cmake/dependencies_dev.cmake)
             configure_file(${PROJECT_SOURCE_DIR}/cmake/dependencies_dev.cmake
                            cmake/dependencies_dev_${PROJECT_NAME}.cmake)
+            # in ${PROJECT_BINARY_DIR}/cmake/
             include(dependencies_dev_${PROJECT_NAME})
         endif()
         add_subdirectory(tests)

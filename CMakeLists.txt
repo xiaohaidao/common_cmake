@@ -9,11 +9,10 @@ if(NOT PROJECT_NAME)
 endif()
 
 # import tool include(common) # deprecate
-include(add_src_exe) # deprecate
-include(add_src_lib) # deprecate
+include(add_src_exe)
+include(add_src_lib)
 include(add_dir_src)
 include(add_dir_tests)
-include(add_lib_exe)
-include(add_test_exe)
+# include(add_lib_exe) # deprecate include(add_test_exe) # deprecate
 include(fetch)
 include(update_ws)
