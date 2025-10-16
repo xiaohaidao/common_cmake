@@ -13,7 +13,11 @@ function(add_dir_src src)
     export_install_targets(${PROJECT_NAME})
 
     if(EXISTS ${PROJECT_SOURCE_DIR}/include)
-        install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/" DESTINATION include)
+        install(
+            DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
+            DESTINATION include
+            COMPONENT dev)
     endif()
+    include(use_cpack)
 
 endfunction()

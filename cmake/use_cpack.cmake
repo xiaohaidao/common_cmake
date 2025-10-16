@@ -1,0 +1,24 @@
+# generator
+set(CPACK_GENERATOR "ZIP;DEB")
+set(CPACK_PACKAGE_CONTACT "empty@example.com")
+set(CPACK_PACKAGE_FILE_NAME
+    ${PROJECT_NAME}-${CMAKE_PROJECT_VERSION}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}
+)
+# get_cmake_property(compenments COMPONENTS)
+
+# source generator
+set(CPACK_SOURCE_GENERATOR "TXZ")
+set(CPACK_SOURCE_IGNORE_FILES /CSV/ /\\\\.git/ /build.*/ /\\\\.vs.*/ /\\\\.swp/
+                              /\\\\.cache/)
+
+# zip package
+set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
+set(CPACK_ARCHIVE_RUNTIME_FILE_NAME ${CPACK_PACKAGE_FILE_NAME})
+
+# debian package
+set(CPACK_DEB_COMPONENT_INSTALL ON)
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.2)")
+set(CPACK_DEBIAN_RUNTIME_FILE_NAME ${CPACK_PACKAGE_FILE_NAME})
+set(CPACK_DEBIAN_DEV_PACKAGE_DEPENDS ${CPACK_DEBIAN_RUNTIME_FILE_NAME})
+
+include(CPack)

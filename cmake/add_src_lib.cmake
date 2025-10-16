@@ -8,6 +8,7 @@ function(add_src_lib target)
     target_include_directories(
         ${library_name}
         PRIVATE ${PROJECT_SOURCE_DIR}/src/
+        PRIVATE ${CMAKE_CURRENT_LIST_DIR}
         PUBLIC $<INSTALL_INTERFACE:include/>
                $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/>)
 
@@ -18,6 +19,17 @@ function(add_src_lib target)
     )
 
     # install and export configure
-    message(".... library_name : ${library_name}")
-    install(TARGETS ${library_name} EXPORT ${PROJECT_NAME})
+    get_target_property(target_type ${library_name} TYPE)
+    message(".... library_name : ${library_name}, ${target_type}")
+    if(target_type STREQUAL "SHARED_LIBRARY")
+        install(
+            TARGETS ${library_name}
+            EXPORT ${PROJECT_NAME}
+            COMPONENT runtime)
+    else()
+        install(
+            TARGETS ${library_name}
+            EXPORT ${PROJECT_NAME}
+            COMPONENT dev)
+    endif()
 endfunction()

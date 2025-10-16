@@ -13,6 +13,7 @@ function(export_install_targets target_name)
         EXPORT ${target_name}
         NAMESPACE ${target_name}::
         DESTINATION ${cmake_files_install_dir}
+        COMPONENT dev
         FILE ${target_name}Targets.cmake)
 
     set(target_name_config ${target_name}Config)
@@ -26,7 +27,9 @@ function(export_install_targets target_name)
         COMPATIBILITY
             AnyNewerVersion # AnyNewerVersion|SameMajorVersion|SameMinorVersion|ExactVersion
     )
-    install(FILES ${install_export_dir}/${target_name_config}.cmake
-                  ${install_export_dir}/${target_name_config}Version.cmake
-            DESTINATION ${cmake_files_install_dir})
+    install(
+        FILES ${install_export_dir}/${target_name_config}.cmake
+              ${install_export_dir}/${target_name_config}Version.cmake
+        COMPONENT dev
+        DESTINATION ${cmake_files_install_dir})
 endfunction()

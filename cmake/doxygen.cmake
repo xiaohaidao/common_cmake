@@ -22,4 +22,5 @@ doxygen_add_docs(
 install(
     DIRECTORY ${DOXYGEN_OUTPUT_DIRECTORY}/../
     TYPE DOC
+    COMPONENT doc
     OPTIONAL)
