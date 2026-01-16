@@ -21,7 +21,7 @@ function(add_src_exe)
         message(".... application name: ${PROJECT_NAME}")
         add_executable(${PROJECT_NAME} main.cpp ${_source})
 
-        target_link_libraries(${PROJECT_NAME} PRIVATEATE ${libraries_name})
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${libraries_name})
         install(TARGETS ${PROJECT_NAME} COMPONENT runtime)
     endif()
     if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/bin)
